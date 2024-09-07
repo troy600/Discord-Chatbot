@@ -2,7 +2,8 @@
 #### Your Discord AI Companion!
 
 
-## big thanks to this guy who build the original repo and let us clone it!
+## big thanks to Mishalhossin who build the original repo and let us clone it!
+#### join to his discord now! 
 <div align="center">
   <a href="https://discord.gg/6MT3CZauT8">
     <img src="https://discordapp.com/api/guilds/1110950079390547968/widget.png?style=banner2">
