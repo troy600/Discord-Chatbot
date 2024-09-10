@@ -35,7 +35,6 @@ def add_reaction(message):
     # This function is run in a separate thread
     asyncio.run_coroutine_threadsafe(message.add_reaction('👍'), bot.loop)
     asyncio.run_coroutine_threadsafe(message.add_reaction('👎'), bot.loop)
-#activity = discord.Activity(type=discord.ActivityType.listening, name="Sonic Blaster")
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="/", intents=intents, heartbeat_timeout=60)
@@ -108,6 +107,7 @@ MAX_HISTORY = config['MAX_HISTORY']
 personaname = config['INSTRUCTIONS'].title()
 replied_messages = {}
 active_channels = {}
+g4f_history = {}
 
 
 
@@ -360,22 +360,13 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
         generated_images = await asyncio.gather(*tasks)
         for var69 in generated_images:
             image = Image.open(var69)
-#            numberr = random.randint(1, 999999)
-#            image.save(f"/sdcard/nft/imagines/{prompt} {numberr}.png")
-
     files = []
     for index, image in enumerate(generated_images):
         if is_nsfw:
             img_file = discord.File(image, filename=f"image_{seed+index}.png", spoiler=True, description=prompt)
         else:
-#            img69 = Image.open(image)
             img_file = discord.File(image, filename=f"image_{seed+index}.png", description=prompt)
             files.append(img_file)
-#            img69.save(f"/sdcard/nft/imagines/{prompt} {seed+index}.png")
-            #(f"image_{seed+index}.png", dir1)
-#            img_file = discord.File(image, filename=f"image_{seed+index}.png", description=prompt)
-#        files.append(img_file)
-
     if is_nsfw:
         prompt = f"||{prompt}||"
         embed = discord.Embed(color=0xFF0000)
@@ -703,6 +694,32 @@ async def pinger(ctx, host):
 @commands.is_owner()
 async def bash(ctx, command):
     await ctx.send(f"```bash\n {subprocess.getoutput(command)} \n```")
+
+'''
+@bot.hybrid_command(name="chatg4f", description="use the g4f chat")
+async def chatg4f(ctx, message: str):
+    await ctx.defer()
+    key = f"{ctx.author.id}"
+    print(key)
+    if key not in g4f_history:
+        g4f_history[key] = []
+    g4f_history[key].append({"role": "user", "content": message})
+    search_results = await search(prompt=message)
+    history = g4f_history[key]
+        #uncomment and comment when using g4f
+    response = await huggingchat(persona=instruction, history=history, search=search_results)
+  #      response = await generate_response(instructions=instructions, search=search_results, history=history)
+    g4f_history[key].append({"role": "assistant", "name": personaname, "content": response})
+
+    if response is not None:
+        for chunk in split_response(response):
+            try:
+               await ctx.send(content=chunk, allowed_mentions=discord.AllowedMentions.none(), suppress_embeds=True)
+            except:
+                await ctx.send("I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message. Additionally, it appears that the message I was replying to has been deleted, which could be the reason for the issue. If you have any further questions or if there's anything else I can assist you with, please let me know and I'll be happy to help.")
+    else:
+        await ctx.send(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
+'''
 
 
 if detect_replit():
