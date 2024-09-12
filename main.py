@@ -16,7 +16,7 @@ import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, google_gemini, dall_e_gen, sdxl, dall_e_3, fetch_models, fetch_chat_models
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, sdxl, dall_e_3, fetch_models, fetch_chat_models
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -545,19 +545,6 @@ async def changeusr(ctx, new_username):
     sent_message = await ctx.send(message)
     await asyncio.sleep(3)
     await sent_message.delete()
-
-
-
-
-@bot.hybrid_command(name="askgeminipro", description="Ask gemini a question")
-async def ask(ctx, prompt: str):
-    await ctx.defer()
-    response = google_gemini(prompt=prompt)
-    for chunk in split_response(response):
-        await ctx.send(chunk, allowed_mentions=discord.AllowedMentions.none(), suppress_embeds=True)
-
-
-
 
 @commands.guild_only()
 @bot.hybrid_command(name="gif", description=current_language["nekos"])
