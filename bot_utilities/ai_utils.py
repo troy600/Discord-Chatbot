@@ -115,17 +115,6 @@ async def generate_response(instructions, search, history):
     message = response.choices[0].message.content
     return message
 
-def google_gemini(prompt):
-    response = openai.ChatCompletion.create(
-    model="gemini-pro",
-    messages=[
-        {"role": "user", "content": prompt}
-        ]
-    )
-
-    message = response['choices'][0]['message']['content']
-    return message
-
 async def poly_image_gen(session, prompt):
     seed = random.randint(1, 100000)
     image_url = f"https://image.pollinations.ai/prompt/{prompt}?seed={seed}"
