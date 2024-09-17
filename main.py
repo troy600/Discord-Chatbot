@@ -186,7 +186,7 @@ async def on_message(message):
         history = message_history[key]
 
         async with message.channel.typing():
-      #      response = await huggingchat(persona=instruction, history=history)
+      #      response = await huggingchat(persona=instruction, history=history, search=search_results)
             response = await generate_response(instructions=instructions, search=search_results, history=history)
             if message.author.bot:
                 await message.add_reaction('👍')
