@@ -16,7 +16,7 @@ import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, sdxl, dall_e_3, fetch_models, fetch_chat_models
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -217,7 +217,6 @@ async def leave(ctx):
 
 @bot.hybrid_command(name="play", description="song name lol")
 async def play(ctx, file_name: str):
-    voice_channel = ctx.author.voice.channel
     voice_channel_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
     if not voice_channel_client.is_playing():
@@ -260,7 +259,6 @@ async def sauce_show(ctx, sauce = None):
 @bot.hybrid_command(name="sauce-put", description="nh*ntai command to store sauses")
 async def sauce_put(ctx, sauce, rating, tags, character = None, parody = None, title = None):
     await ctx.defer()
-    file_path = 'sausage.json'
 
     if character is None:
         character = "???"
@@ -384,7 +382,7 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
 
     if is_nsfw:
         embed.add_field(name='🔞 NSFW', value=f'- {str(is_nsfw)}', inline=True)
-    sent_message = await ctx.send(embed=embed, files=files)
+    await ctx.send(embed=embed, files=files)
 
 
 
@@ -409,7 +407,7 @@ async def dall_e_3(ctx, prompt):
     await ctx.send(f'🎨 Generated Image by {ctx.author.name} using {model}')
     for imagefileobj in imagefileobjs:
         file = discord.File(imagefileobj, filename="image.png", spoiler=True, description=prompt)
-        sent_message =  await ctx.send(file=file)
+        await ctx.send(file=file)
 
 @bot.hybrid_command(name="imagine-dalle", description="Create images using amazing Ai models")
 @commands.guild_only()
@@ -418,10 +416,8 @@ async def dall_e_3(ctx, prompt):
      app_commands.Choice(name='dalle test', value='dall-e-3'),
      app_commands.Choice(name='Flux 1', value='flux-1-dev'),
      app_commands.Choice(name='Kandinsky 3', value='kandinsky-3.1'),
-     app_commands.Choice(name='Flux 1 pro', value='flux-1-schnell'),
      app_commands.Choice(name='Stable Diffusion 2.1', value='stable-diffusion-2.1'),
-     app_commands.Choice(name='Stable Diffusion 1.5', value='stable-diffusion-1.5'),
-     app_commands.Choice(name='dall-e-3', value='dall-e-3'),
+     app_commands.Choice(name='kandinsky-3.1', value='kandinsky-3.1'),
      app_commands.Choice(name='Material Diffusion', value='material-diffusion')
 ])
 
@@ -707,6 +703,11 @@ async def chatg4f(ctx, message: str):
         await ctx.send(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
 '''
 
+@bot.hybrid_command(name="tts", description="use tts")
+async def ttst(ctx, message, model):
+    ctx.defer()
+    await tts(zmessage=message, zmodel=model)
+    ctx.send(file="zaudio.wav")
 
 if detect_replit():
     from bot_utilities.replit_flask_runner import run_flask_in_thread
