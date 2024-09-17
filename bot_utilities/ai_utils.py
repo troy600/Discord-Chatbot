@@ -79,6 +79,7 @@ async def search(prompt):
     print(blob)
     return blob
 
+
 def fetch_models():
     openai.api_key = os.getenv('CHIMERA_GPT_KEY')
     modelget = openai.Model.list()
@@ -101,6 +102,15 @@ async def dall_e_3(model, prompt):
                 imagefileobjs.append(img_file_obj)
     return imagefileobjs
 
+async def tts(zmessage, zmodel):
+    voicez = await client.audio.speech.create(
+        model="text-moderation-latest",
+        voice="text-moderation-latest",
+        input="text-moderation-latest"
+    )
+    with open("zaudio.wav", "wb") as source:
+        source.write(voicez["data"])
+
 async def generate_response(instructions, search, history):
     search_results = search if search is not None else "Search feature is disabled"
     messages = [
@@ -110,7 +120,8 @@ async def generate_response(instructions, search, history):
         ]
     response = await client.chat.completions.create(
         model=config['GPT_MODEL'],
-        messages=messages
+        messages=messages,
+        response_format="wav"
     )
     message = response.choices[0].message.content
     return message
