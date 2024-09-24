@@ -703,6 +703,11 @@ async def chatg4f(ctx, message: str):
         await ctx.send(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
 '''
 
+@bot.hybrid_command(name="helpc", description="show help options")
+async def helpc(ctx):
+    await ctx.send("hello type '/helpc (command here)' to get some help")
+
+
 @bot.hybrid_command(name="tts", description="use tts")
 async def ttst(ctx, message, model):
     ctx.defer()
