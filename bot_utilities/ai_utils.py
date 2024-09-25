@@ -27,6 +27,25 @@ results_limit = config['MAX_SEARCH_RESULTS']
 client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https://api.naga.ac/v1")
 
 
+def tenor(search):
+    # set the apikey and limit
+    apikey = "AIzaSyCYfdqxXqJfHRoiop_SBrjvkPkLXPRKYSE"   # click to set to your apikey
+    ckey = "my_test_app"  # set the client_key for the integration
+    lmt = 3
+    # our test search
+    search_term = search
+
+    r = requests.get(
+    "https://tenor.googleapis.com/v2/search?q=%s&key=%s&client_key=%s&limit=%s" % (search_term, apikey, ckey,  lmt))
+
+    if r.status_code != 200:
+        return "error"
+        # load the GIFs using the urls for the smaller GIF sizes
+
+    return r.json()
+    
+
+
 def fetch_chat_models(key):
     models = ''
     headers = {
