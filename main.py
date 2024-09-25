@@ -16,7 +16,7 @@ import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -702,6 +702,16 @@ async def chatg4f(ctx, message: str):
     else:
         await ctx.send(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
 '''
+
+@bot.hybrid_command(name="gif2", description="find your favourite gif")
+async def gif2(ctx, category):
+    await ctx.defer()
+    gifs = tenor(search=category)
+
+    for gif in gifs.get('results'):
+        await ctx.send(gif['url'])
+        time.sleep(1)
+
 
 @bot.hybrid_command(name="helpc", description="show help options")
 async def helpc(ctx):
