@@ -25,6 +25,7 @@ from bot_utilities.sanitization_utils import sanitize_prompt
 from model_enum import Model
 import yt_dlp
 import time
+import youtube_dl
 #use huggingface for uncensored models and responses
 from bot_utilities.g4frespond import huggingchat
 
@@ -115,9 +116,9 @@ g4f_history = {}
 async def on_message(message):
     lines = [f'{message.author}: {message.content}']
     with open('chatlog.txt', 'a') as f:
-        if message.author.bot:
-            await message.add_reaction('👍')
-            await message.add_reaction('👎')
+#        if message.author.bot:
+#            await message.add_reaction('👍')
+#            await message.add_reaction('👎')
         for line in lines:
             f.write(line)
             f.write('\n')
@@ -216,12 +217,16 @@ async def leave(ctx):
     await ctx.send("bye :)")
 
 @bot.hybrid_command(name="play", description="song name lol")
-async def play(ctx, file_name: str):
+async def play(ctx, link: str):
     voice_channel_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
+    await ctx.defer()
+
     if not voice_channel_client.is_playing():
-        voice_channel_client.play(discord.FFmpegPCMAudio(file_name))
-        await ctx.send(f'Now playing: {file_name}')
+        children.remove("audio.mp3")
+        children.system(f"yt-dlp -f 140 '{link}' -o audio.mp3")
+        voice_channel_client.play(discord.FFmpegPCMAudio("audio.mp3"))
+        await ctx.send(f'Now playing')
     else:
         await ctx.send('Already playing audio.')
 
@@ -704,9 +709,9 @@ async def chatg4f(ctx, message: str):
 '''
 
 @bot.hybrid_command(name="gif2", description="find your favourite gif")
-async def gif2(ctx, category):
+async def gif2(ctx, category, count: int):
     await ctx.defer()
-    gifs = tenor(search=category)
+    gifs = tenor(search=category, number=count)
 
     for gif in gifs.get('results'):
         await ctx.send(gif['url'])
