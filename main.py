@@ -16,7 +16,7 @@ import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -204,6 +204,12 @@ async def on_message(message):
                     await message.channel.send("I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message. Additionally, it appears that the message I was replying to has been deleted, which could be the reason for the issue. If you have any further questions or if there's anything else I can assist you with, please let me know and I'll be happy to help.")
         else:
             await message.reply(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
+
+'''
+@bot.hybrid_command(name="togglesearch", description="toggle search")
+async def togglesearch(ctx):
+    if search
+'''
 
 @bot.hybrid_command(name="join", description="getbme to a vc")
 async def join(ctx):
@@ -439,6 +445,15 @@ async def imagine_dalle(ctx, prompt, model: app_commands.Choice[str], num_images
         file = discord.File(imagefileobj, filename="image.png", spoiler=True, description=prompt)
         sent_message =  await ctx.send(file=file)
 
+
+@bot.hybrid_command(name="flux", description="generate images using flux")
+async def flux(ctx, prompt):
+    await ctx.defer()
+    imagefile = flux_gen(prompts=prompt)
+    await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
+    file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
+    sent_message =  await ctx.send(file=file)
+    os.remove(imagefile)
 
 @bot.hybrid_command(name="debug", description='null')
 @commands.guild_only()
