@@ -26,8 +26,8 @@
 - [x] GPT3/4-mini model: Leverage the power of GPT model for advanced language processing capabilities. 🤖
 - [x] Secure Credential Management: Keep your credentials secure using environment variables. 🔑
 - [!] Web Access(Removed IDK): Web Access is now available! Unlock a whole new level of awesomeness. 🌐
-- [no] YouTube Video Summarizer: This is a feature that utilizes the power of the Language Model (LLM) to generate summaries of YouTube videos. 🌐
-- [?] Speech recognition: (Under development) Get ready for an LLM-powered voice assistant.
+- [!] YouTube Video Summarizer: This is a feature that utilizes the power of the Language Model (LLM) to generate summaries of YouTube videos. 🌐
+- [!] Speech recognition: (Under development) Get ready for an LLM-powered voice assistant.
 
 </details>
 
@@ -43,8 +43,8 @@
 - [x] `/toggledm`: Toggle DM for chatting. 💬
 - [x] `/clear`: Clear the message history. 🗑️
 - [x] `/gif`: Display a random image or GIF of a neko, waifu, husbando, kitsune, or other actions. 🐱
-- [x] '/gif2': using tenor's api to display random gif
-- [x] '/newgrounds': download a music from newgrounds
+- [x] `/gif2`: using tenor's api to display random gif
+- [x] `/newgrounds`: download a music from newgrounds
 - [x] `/imagine-dalle`: create images using `Dalle`
 - [?] `/support`: Need Support?
 </details>
