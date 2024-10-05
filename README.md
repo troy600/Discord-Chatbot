@@ -1,4 +1,4 @@
-# Discord AI Chatbot 🤖
+# Discord AI Chatbot(Legacy) 🤖
 #### Your Discord AI Companion!
 
 
@@ -23,10 +23,10 @@
 - [x] Mention Recognition: The bot always responds when you mention it or say its name. It's as attentive as a squirrel spotting a shiny acorn! ⚙️
 - [x] Message Handling: The bot knows when you're replying to someone else, so it won't cause confusion. It's like having a mind reader on your server! 🪄
 - [x] Channel-Specific Responses: Use the `/toggleactive` command to chill the bot in a specific channel. ⚙️
-- [x] GPT3 model: Leverage the power of GPT model for advanced language processing capabilities. 🤖
+- [x] GPT3/4-mini model: Leverage the power of GPT model for advanced language processing capabilities. 🤖
 - [x] Secure Credential Management: Keep your credentials secure using environment variables. 🔑
 - [!] Web Access(Removed IDK): Web Access is now available! Unlock a whole new level of awesomeness. 🌐
-- [ ] YouTube Video Summarizer: This is a feature that utilizes the power of the Language Model (LLM) to generate summaries of YouTube videos. 🌐
+- [no] YouTube Video Summarizer: This is a feature that utilizes the power of the Language Model (LLM) to generate summaries of YouTube videos. 🌐
 - [?] Speech recognition: (Under development) Get ready for an LLM-powered voice assistant.
 
 </details>
@@ -35,7 +35,7 @@
 <summary><strong>Commands ⚙️⚙️ (Click to expand) </strong></summary>
 
 - [x] `/help`: Get all other commands. ⚙️
-- [x] `/pfp [image_url]`: Change the bot's actual profile picture. 🖼️
+- [x] `/pfp [image_url]`: Change the bot's actual profile picture/gif. 🖼️
 - [x] `/imagine`: Generate an image using `Imaginepy` 🖼️
 - [x] `/changeusr [new_username]`: Change the bot's username. 📛
 - [x] `/ping`: Get a "Pong" response from the bot. 🏓
@@ -43,9 +43,10 @@
 - [x] `/toggledm`: Toggle DM for chatting. 💬
 - [x] `/clear`: Clear the message history. 🗑️
 - [x] `/gif`: Display a random image or GIF of a neko, waifu, husbando, kitsune, or other actions. 🐱
+- [x] '/gif2': using tenor's api to display random gif
 - [x] '/newgrounds': download a music from newgrounds
-- [x] `/dalle`: create images using `Dalle`
-- [x] `/support`: Need Support?
+- [x] `/imagine-dalle`: create images using `Dalle`
+- [?] `/support`: Need Support?
 </details>
 
 ## Additional configuration ⚙️
