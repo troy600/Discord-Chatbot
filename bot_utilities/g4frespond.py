@@ -15,8 +15,8 @@ async def huggingchat(persona, history, search):
 
     ]
     response = await client.chat.completions.create(
-        model=config['GPT_MODEL'],
-        #model="mixtral-x87b",
+        #model=config['GPT_MODEL'],
+        model="mistral-nemo",
         messages=messages
     )
     message = response.choices[0].message.content
