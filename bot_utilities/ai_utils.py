@@ -17,6 +17,8 @@ import sys
 from duckduckgo_search import AsyncDDGS
 import openai
 import requests
+from g4f.client import AsyncClient
+from huggingface_hub import AsyncInferenceClient as huggingface
 
 load_dotenv()
 current_language = load_current_language()
@@ -26,9 +28,15 @@ results_limit = config['MAX_SEARCH_RESULTS']
 
 client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https://api.naga.ac/v1")
 
+async def flux_gen(prompts):
+    client = huggingface(model="black-forest-labs/FLUX.1-dev", token=os.getenv("HF"))
+    image = await client.text_to_image(prompts)
+    buffer = random.randint(1, 1000)
+    image.save(f"{buffer}.png")
+    return f"{buffer}.png"
 
 def tenor(search, number):
-    apikey = "AIzaSyCYfdqxXqJfHRoiop_SBrjvkPkLXPRKYSE"
+    apikey = os.getenv("TENOR")
     ckey = "my_test_app"  # set the client_key for the integration
     lmt = number
     search_term = search
