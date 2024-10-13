@@ -16,6 +16,7 @@ import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
+from bot_utilities.youtubedl import thefunc
 from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
@@ -38,7 +39,7 @@ def add_reaction(message):
     asyncio.run_coroutine_threadsafe(message.add_reaction('👎'), bot.loop)
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix="/", intents=intents, heartbeat_timeout=60)
+bot = commands.Bot(command_prefix="/", intents=intents, heartbeat_timeout=120)
 TOKEN = children.getenv('DISCORD_TOKEN')  # Loads Discord bot token from env
 
 if TOKEN is None:
@@ -190,9 +191,8 @@ async def on_message(message):
         history = message_history[key]
 
         async with message.channel.typing():
-#            print(instructions)
-            response = await huggingchat(persona=instructions, history=history, search=search_results)
-      #      response = await generate_response(instructions=instructions, search=search_results, history=history)
+#            response = await huggingchat(persona=instructions, history=history, search=search_results)
+            response = await generate_response(instructions=instructions, search=search_results, history=history)
             if message.author.bot:
                 await message.add_reaction('👍')
                 await message.add_reaction('👎')
@@ -742,6 +742,20 @@ async def helpc(ctx):
     await ctx.send("hello type '/helpc (command here)' to get some help")
 
 
+@app_commands.describe(
+     prompt="make bot say something"
+)
+@bot.hybrid_command(name="yt-music", description="convert your favouirite somng on yt")
+async def yt_music(ctx, yt_link, file_name : str = "audio.mp3"):
+    await ctx.defer()
+    await thefunc(link=yt_link, music_name=file_name)
+    await ctx.send(f"{yt_link} success")
+    file = discord.File(file_name)
+    await ctx.send(file=file)
+    children.remove(file_name)
+
+
+
 @bot.hybrid_command(name="tts", description="use tts")
 async def ttst(ctx, message, model):
     ctx.defer()
@@ -753,3 +767,6 @@ if detect_replit():
     run_flask_in_thread()
 if __name__ == "__main__":
     bot.run(TOKEN)
+
+
+#https://www.youtube.com/watch?v=mhcV6lWTlA4
