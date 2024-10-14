@@ -20,12 +20,13 @@ import requests
 from g4f.client import AsyncClient
 from huggingface_hub import AsyncInferenceClient as huggingface
 
+
 load_dotenv()
 current_language = load_current_language()
 internet_access = config['INTERNET_ACCESS']
 results_limit = config['MAX_SEARCH_RESULTS']
 
-
+dalle_3 = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "http://127.0.0.1:1337/v1")
 client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https://api.naga.ac/v1")
 
 async def flux_gen(prompts):
@@ -126,6 +127,41 @@ async def dall_e_3(model, prompt):
                 imagefileobjs.append(img_file_obj)
     return imagefileobjs
 
+
+async def dalle3(model, prompt):
+    response = await dalle_3.images.generate(
+        model=model,
+        prompt=prompt,
+    )
+    imagefileobjs = []
+    for image in response.data:
+        image_url = image.url
+        async with aiohttp.ClientSession() as session:
+            async with session.get(image_url) as response:
+                content = await response.content.read()
+                img_file_obj = io.BytesIO(content)
+                imagefileobjs.append(img_file_obj)
+    return imagefileobjs
+
+
+'''
+async def dalle3(model, prompt):
+    response = await dalle_3.images.generate(
+        model=model,
+        prompt=prompt,
+    )
+    imagefileobjs = []
+    for image in response.data:
+        image_url = image.url
+        async with aiohttp.ClientSession() as session:
+            async with session.get(image_url) as response:
+                content = await response.content.read()
+                img_file_obj = io.BytesIO(content)
+                imagefileobjs.append(img_file_obj)
+    return imagefileobjs
+'''
+
+
 async def tts(zmessage, zmodel):
     voicez = await client.audio.speech.create(
         model="text-moderation-latest",
@@ -219,5 +255,31 @@ async def generate_image_prodia(prompt, model, sampler, seed, neg):
                         duration = time.time() - start_time
                         print(f"\033[1;34m(Avernus) Finished image creation\n\033[0mJob id : {job_id}  Prompt : ", prompt, "in", duration, "seconds.")
                         return img_file_obj
+
+
+
+async def llama_vision(prompt, image):
+    response = await client.chat.completions.create(
+        model="llama-3.2-11b-vision-instruct",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{image}",
+                        }
+                    },
+                ],
+            }
+        ],
+    )
+
+    message = response.choices[0].message.content
+#    message = response.choices[0].message.content
+    return message
+
 
 print(fr.BLUE, "ai_utils is working properly :)")
