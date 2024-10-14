@@ -17,7 +17,7 @@ from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from bot_utilities.youtubedl import thefunc
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -417,12 +417,24 @@ async def troysays(ctx, prompt: str):
 @bot.hybrid_command(name='dall_e_3', description='eyy')
 @commands.guild_only()
 async def dall_e_3(ctx, prompt):
+    model = 'dalle-3'
+    imagefileobjs = await dalle3(model, prompt)
+    await ctx.send(f'🎨 Generated Image by {ctx.author.name} using {model}')
+    for imagefileobj in imagefileobjs:
+        file = discord.File(imagefileobj, filename="image.png", spoiler=True, description=prompt)
+        await ctx.send(file=file)
+
+'''
+@bot.hybrid_command(name='dalle_3', description='dalle-3')
+@commands.guild_only()
+async def dall3_3(ctx, prompt):
     model = 'dall-e-3'
     imagefileobjs = await dall_e_3(model, prompt)
     await ctx.send(f'🎨 Generated Image by {ctx.author.name} using {model}')
     for imagefileobj in imagefileobjs:
         file = discord.File(imagefileobj, filename="image.png", spoiler=True, description=prompt)
         await ctx.send(file=file)
+'''
 
 @bot.hybrid_command(name="imagine-dalle", description="Create images using amazing Ai models")
 @commands.guild_only()
@@ -754,6 +766,27 @@ async def yt_music(ctx, yt_link, file_name : str = "audio.mp3"):
     await ctx.send(file=file)
     children.remove(file_name)
 
+
+@bot.hybrid_command(name="chat", description="Ask gemini a question")
+async def chat(ctx, prompt: str, image: discord.Attachment = None):
+    message_history = []
+    message_history.append({"role": "user", "content": prompt})
+    history = message_history
+    await ctx.defer()
+#    message_history = message_history[-MAX_HISTORY:]
+#    message_history = message_history[-MAX_HISTORY:]
+
+    #await ctx.defer()
+    image_bytes = await image.read()
+        # Create a discord.File object from the image f
+#    image_bytes = await image.read()
+
+    base64_image = base64.b64encode(image_bytes).decode('utf-8')
+
+    response = await google_gemini(prompt=prompt, image=base64_image)
+    for chunk in split_response(response):
+        await ctx.send(image)
+        await ctx.send(chunk)
 
 
 @bot.hybrid_command(name="tts", description="use tts")
