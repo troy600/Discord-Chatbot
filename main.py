@@ -29,6 +29,7 @@ import time
 import youtube_dl
 #use huggingface for uncensored models and responses
 from bot_utilities.g4frespond import huggingchat
+import base64
 
 load_dotenv()
 
@@ -191,8 +192,8 @@ async def on_message(message):
         history = message_history[key]
 
         async with message.channel.typing():
-#            response = await huggingchat(persona=instructions, history=history, search=search_results)
-            response = await generate_response(instructions=instructions, search=search_results, history=history)
+            response = await huggingchat(persona=instructions, history=history, search=search_results)
+#            response = await generate_response(instructions=instructions, search=search_results, history=history)
             if message.author.bot:
                 await message.add_reaction('👍')
                 await message.add_reaction('👎')
@@ -758,35 +759,40 @@ async def helpc(ctx):
      prompt="make bot say something"
 )
 @bot.hybrid_command(name="yt-music", description="convert your favouirite somng on yt")
-async def yt_music(ctx, yt_link, file_name : str = "audio.mp3"):
+async def yt_music(ctx, yt_link, file_name : str = "audio"):
     await ctx.defer()
     await thefunc(link=yt_link, music_name=file_name)
     await ctx.send(f"{yt_link} success")
-    file = discord.File(file_name)
+    file = discord.File(f'./temp/{file_name}.mp3')
     await ctx.send(file=file)
-    children.remove(file_name)
+    children.system("rm -rvf ./temp/*")
 
 
 @bot.hybrid_command(name="chat", description="Ask gemini a question")
 async def chat(ctx, prompt: str, image: discord.Attachment = None):
-    message_history = []
-    message_history.append({"role": "user", "content": prompt})
-    history = message_history
+#    message_history.append({"role": "user", "content": prompt})
+#    history = message_history
     await ctx.defer()
-#    message_history = message_history[-MAX_HISTORY:]
-#    message_history = message_history[-MAX_HISTORY:]
+
+    key = f"{ctx.author.id}-{ctx.channel.id}"
+    if key not in message_history:
+        message_history[key] = []
+
+    message_history[key] = message_history[key][-MAX_HISTORY:]
+
 
     #await ctx.defer()
     image_bytes = await image.read()
-        # Create a discord.File object from the image f
-#    image_bytes = await image.read()
+    message_history[key].append({"role": "user", "content": f'{prompt}'})
+    history = message_history[key]
 
     base64_image = base64.b64encode(image_bytes).decode('utf-8')
-
-    response = await google_gemini(prompt=prompt, image=base64_image)
-    for chunk in split_response(response):
-        await ctx.send(image)
-        await ctx.send(chunk)
+    async with ctx.channel.typing():
+        response = await llama_vision(prompt=prompt, image=base64_image)
+        for chunk in split_response(response):
+            await ctx.send(image)
+            await ctx.send(chunk)
+            message_history[key].append({"role": "assistant", "name": personaname, "content": chunk})
 
 
 @bot.hybrid_command(name="tts", description="use tts")
