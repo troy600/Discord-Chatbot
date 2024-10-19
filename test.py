@@ -4,12 +4,11 @@ this = ""
 
 from g4f.client import AsyncClient
 
-async def main():
-    userin = input(">>")
+async def main(things):
     client = AsyncClient()
     stream = await client.chat.completions.create(
-        model="mistral-7b",
-        messages=[{"role": "user", "content": f"{userin}"}],
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": f"{things}"}],
         stream=True,
         # Add any other necessary parameters
     )
@@ -17,4 +16,7 @@ async def main():
         if chunk.choices[0].delta.content:
             print(chunk.choices[0].delta.content or "", end="")
 
-asyncio.run(main())
+while True:
+    user = input ("\n>>")
+    asyncio.run(main(things=user))
+
