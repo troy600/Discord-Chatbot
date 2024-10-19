@@ -1,4 +1,3 @@
-#!venv/bin/python
 import shutil
 import subprocess
 import asyncio
