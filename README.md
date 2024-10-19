@@ -25,6 +25,7 @@
 - [x] Channel-Specific Responses: Use the `/toggleactive` command to chill the bot in a specific channel. ⚙️
 - [x] GPT3/4-mini model: Leverage the power of GPT model for advanced language processing capabilities. 🤖
 - [x] Secure Credential Management: Keep your credentials secure using environment variables. 🔑
+- [x] Youtube Music downloader; lets you download music from youtube(Might remove this soon).
 - [!] Web Access(Removed IDK): Web Access is now available! Unlock a whole new level of awesomeness. 🌐
 - [!] YouTube Video Summarizer: This is a feature that utilizes the power of the Language Model (LLM) to generate summaries of YouTube videos. 🌐
 - [!] Speech recognition: (Under development) Get ready for an LLM-powered voice assistant.
