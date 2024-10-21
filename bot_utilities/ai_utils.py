@@ -262,6 +262,7 @@ async def llama_vision(prompt, image):
     response = await client.chat.completions.create(
         model="llama-3.2-11b-vision-instruct",
         messages=[
+#            *history,
             {
                 "role": "user",
                 "content": [
