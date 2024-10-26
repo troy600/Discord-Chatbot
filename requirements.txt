@@ -13,8 +13,9 @@ python-docx
 tqdm
 fake-useragent
 openai
-werkzeug>=3.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+werkzeug
 colorama
 duckduckgo_search
 pillow
 yt-dlp
+g4f==0.3.2.9
