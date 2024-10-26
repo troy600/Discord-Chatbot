@@ -1,4 +1,4 @@
-from g4f.client import AsyncClient
+from g4f.client import Client
 from g4f.Provider import HuggingChat, HuggingFace
 import asyncio
 from bot_utilities.config_loader import load_current_language, config
@@ -6,34 +6,10 @@ import os
 
 thehftokenusedonyouraccount = os.getenv("HF")
 
-client = AsyncClient(
+client = Client(
     provider=HuggingChat
 )
-'''
-from huggingface_hub import AsyncInferenceClient
 
-async def huggingchat(persona, history, search):
-    print(history)
-    model_id="mistralai/Mistral-Nemo-Instruct-2407"
-    client = AsyncInferenceClient(api_key=thehftokenusedonyouraccount)
-
-    search_result = f"Search_Results: {search}" if search is not None else ""
-
-    messages = [
-        { "role": "system", "content": persona },
-	    *history,
-#        {"role": "assistant", "search": "result", "content": search_result}
-    ]
-    output = await client.chat.completions.create(
-        model=model_id, 
-        messages=messages,
-        temperature=0.5,
-        top_p=0.7
-    )
-
-    return output.choices[0].message.content
-
-'''
 async def huggingchat(persona, history, search):
     search_result = search if search is not None else "search results is disabled"
     messages = [
@@ -42,9 +18,9 @@ async def huggingchat(persona, history, search):
         {"role": "assistant", "search": "result", "content": search_result}
 
     ]
-    response = await client.chat.completions.create(
+    response = await client.chat.completions.async_create (
         #model=config['GPT_MODEL'],
-        model="mistral-nemo",
+        model="hermes-3",
         messages=messages
     )
     message = response.choices[0].message.content
