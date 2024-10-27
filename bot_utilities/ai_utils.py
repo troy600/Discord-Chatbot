@@ -17,7 +17,7 @@ import sys
 from duckduckgo_search import AsyncDDGS
 import openai
 import requests
-from g4f.client import AsyncClient
+from g4f.client import Client
 from huggingface_hub import AsyncInferenceClient as huggingface
 
 
