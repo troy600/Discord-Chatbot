@@ -16,7 +16,7 @@ from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from bot_utilities.youtubedl import thefunc
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -83,6 +83,9 @@ async def on_ready():
     print()
     print()
     print(f"\033[1;38;5;202mAvailable models: {fetch_chat_models(key=CHIMERA_GPT_KEY)}\033[0m")
+    print()
+    print()
+    print(f"\033[1;38;5;202mAvailable models: {g4f_fetch_chat_models(key=CHIMERA_GPT_KEY)}\033[0m")
     print(f"\033[1;38;5;46mCurrent model: {config['GPT_MODEL']}\033[0m")
     if presences_disabled:
         return
@@ -208,12 +211,6 @@ async def on_message(message):
                     await message.channel.send("I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message. Additionally, it appears that the message I was replying to has been deleted, which could be the reason for the issue. If you have any further questions or if there's anything else I can assist you with, please let me know and I'll be happy to help.")
         else:
             await message.reply(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
-
-'''
-@bot.hybrid_command(name="togglesearch", description="toggle search")
-async def togglesearch(ctx):
-    if search
-'''
 
 @bot.hybrid_command(name="join", description="getbme to a vc")
 async def join(ctx):
@@ -398,8 +395,6 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
     if is_nsfw:
         embed.add_field(name='🔞 NSFW', value=f'- {str(is_nsfw)}', inline=True)
     await ctx.send(embed=embed, files=files)
-
-
 
 @app_commands.describe(
      prompt="make bot say something",
