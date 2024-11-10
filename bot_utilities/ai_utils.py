@@ -31,7 +31,7 @@ client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https:/
 async def anythingxl(prompts, negative):
     if negative == None:
         negative = "";
-    image = huggingface(model="artificialguybr/Anything-XL-Free-Demo", token=f"{os.getenv("HF")}")
+    image = huggingface(model="eienmojiki/Anything-XL", token=f"{os.getenv("HF")}")
     result = await image.text_to_image(
         prompt=f"{prompts}",
         width=1024,
