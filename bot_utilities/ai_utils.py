@@ -1,4 +1,3 @@
-from PIL import Image
 import aiohttp
 from colorama import Fore as fr
 import io
@@ -17,9 +16,8 @@ import sys
 from duckduckgo_search import AsyncDDGS
 import openai
 import requests
-from g4f.client import Client
+from gradio_client import Client as Flux_Sch
 from huggingface_hub import AsyncInferenceClient as huggingface
-
 
 load_dotenv()
 current_language = load_current_language()
@@ -28,6 +26,28 @@ results_limit = config['MAX_SEARCH_RESULTS']
 
 dalle_3 = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "http://127.0.0.1:1337/v1")
 client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https://api.naga.ac/v1")
+
+
+async def anythingxl(prompts, negative):
+    if negative == None:
+        negative = "";
+    image = huggingface(model="artificialguybr/Anything-XL-Free-Demo", token=f"{os.getenv("HF")}")
+    result = await image.text_to_image(
+        prompt=f"{prompts}",
+        width=1024,
+        height=1024
+    )
+    buffer = random.randint(1, 11111)
+    result.save(f"{buffer}.png")
+    return f"{buffer}.png"
+
+
+async def flux_sch(prompt):
+    client = huggingface(model="black-forest-labs/FLUX.1-schnell", token=os.getenv("HF"))
+    results = await client.text_to_image(prompt=f"{prompt}", width=1024, height=1024)
+    buffer = random.randint(1, 1100)
+    results.save(F"{buffer}.png")
+    return f"{buffer}"
 
 async def flux_gen(prompts):
     client = huggingface(model="black-forest-labs/FLUX.1-dev", token=os.getenv("HF"))
@@ -70,6 +90,24 @@ def fetch_chat_models(key):
 
     return models
 
+
+def g4f_fetch_chat_models(key):
+    models = ''
+    headers = {
+        'Authorization': f'Bearer {key}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.get('http://127.0.0.1:1337/v1/models', headers=headers)
+    if response.status_code == 200:
+        ModelsData = response.json()
+        for model in ModelsData.get('data'):
+            models += model['id'] + "\n"
+
+    else:
+        print(f"Failed to fetch chat models. Status code: {response.status_code}")
+
+    return models
 
 
 def sdxl(prompt):
