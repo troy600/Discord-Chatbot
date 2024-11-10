@@ -1,9 +1,7 @@
-import shutil
 import subprocess
 import asyncio
 from PIL import Image
 import os as children
-import io
 from itertools import cycle
 import datetime
 import json
@@ -11,25 +9,21 @@ import requests
 import aiohttp
 import discord
 import random
-import string
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from bot_utilities.youtubedl import thefunc
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
 from bot_utilities.replit_detector import detect_replit
-from bot_utilities.sanitization_utils import sanitize_prompt
+# Enable Sanitization
+#from bot_utilities.sanitization_utils import sanitize_prompt
 from model_enum import Model
 import yt_dlp
 import time
-import youtube_dl
-#use huggingface for uncensored models and responses
-from bot_utilities.g4frespond import huggingchat
 import base64
-
 load_dotenv()
 
 # Set up the Discord bot
@@ -69,6 +63,8 @@ load_instructions(instruction)
 
 CHIMERA_GPT_KEY = children.getenv('CHIMERA_GPT_KEY')
 
+
+
 @bot.event
 async def on_ready():
     await bot.tree.sync()
@@ -95,8 +91,6 @@ async def on_ready():
         delay = config['PRESENCES_CHANGE_DELAY']
         await bot.change_presence(activity=discord.Game(name=presence_with_count))
         await asyncio.sleep(delay)
-
-
 
 # Set up the instructions
 current_time = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -182,10 +176,7 @@ async def on_message(message):
 
         search_results = await search(message.content)
 
-        if message.author.name == "salaxium":
-            discorduser = "Troy"
-        else:
-            discorduser = message.author.name
+
         bot_mention = f'<@{bot.user.id}>'
 
         message.content = message.content.replace("/ns", "").replace(bot.user.name, "").replace(bot_mention, "")
@@ -211,6 +202,10 @@ async def on_message(message):
                     await message.channel.send("I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message. Additionally, it appears that the message I was replying to has been deleted, which could be the reason for the issue. If you have any further questions or if there's anything else I can assist you with, please let me know and I'll be happy to help.")
         else:
             await message.reply(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
+
+@bot.hybrid_command(name="hello", description="get random response")
+async def hello(ctx):
+    await ctx.send(await get_random_prompt("hello"))
 
 @bot.hybrid_command(name="join", description="getbme to a vc")
 async def join(ctx):
@@ -360,7 +355,7 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
         num_images = 10
 
     tasks = []
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession():
         while len(tasks) < num_images:
             fork = generate_image_prodia(prompt, model_uid, sampler.value, seed+(len(tasks)-1), negative)
             task = asyncio.ensure_future(fork)
@@ -768,6 +763,27 @@ async def ttst(ctx, message, model):
     ctx.defer()
     await tts(zmessage=message, zmodel=model)
     ctx.send(file="zaudio.wav")
+
+
+
+@bot.hybrid_command(name="flux_schnell", description="use to generate images using flux_schnell")
+async def flux_schnell(ctx, prompt):
+    await ctx.defer()
+    imagefile =await flux_sch(prompt=prompt)
+    await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
+    file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
+    await ctx.send(file=file)
+    children.remove(imagefile)
+
+@bot.hybrid_command(name="anything_xl", description="animate image generator")
+async def anything_xl(ctx, prompt, negative : str = None):
+    await ctx.defer()
+    imagefile =await anythingxl(prompt, negative)
+    await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
+    file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
+    await ctx.send(file=file)
+    children.remove(imagefile)
+
 
 if detect_replit():
     from bot_utilities.replit_flask_runner import run_flask_in_thread
