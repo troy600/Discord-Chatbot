@@ -18,4 +18,6 @@ colorama
 duckduckgo_search
 pillow
 yt-dlp
-g4f==0.3.2.9
+g4f
+gradio_client
+
