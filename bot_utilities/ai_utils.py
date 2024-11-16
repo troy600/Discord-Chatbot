@@ -20,7 +20,8 @@ from gradio_client import Client as Flux_Sch
 from huggingface_hub import AsyncInferenceClient as huggingface
 from huggingface_hub import login
 
-login(os.getenv('HF'))
+
+login(f"os.getenv{('HF')}", False, True, True)
 
 load_dotenv()
 current_language = load_current_language()
