@@ -18,6 +18,9 @@ import openai
 import requests
 from gradio_client import Client as Flux_Sch
 from huggingface_hub import AsyncInferenceClient as huggingface
+from huggingface_hub import login
+
+login(os.getenv('HF'))
 
 load_dotenv()
 current_language = load_current_language()
@@ -29,25 +32,31 @@ client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https:/
 
 
 async def anythingxl(prompts, negative):
-    if negative == None:
-        negative = "";
-    image = huggingface(model="eienmojiki/Anything-XL", token=f"{os.getenv("HF")}")
-    result = await image.text_to_image(
-        prompt=f"{prompts}",
-        width=1024,
-        height=1024
+    client = Flux_Sch("artificialguybr/Anything-XL-Free-Demo")
+    result = client.predict(
+        async_mode=True,
+	    prompt=prompts,
+		negative_prompt="",
+		seed=0,
+		custom_width=1024,
+		custom_height=1024,
+		guidance_scale=7,
+		num_inference_steps=28,
+		sampler="DPM++ 2M SDE Karras",
+		aspect_ratio_selector="1024 x 1024",
+		use_upscaler=False,
+		upscaler_strength=0.55,
+		upscale_by=1.5,
+		api_name="/run"
     )
-    buffer = random.randint(1, 11111)
-    result.save(f"{buffer}.png")
-    return f"{buffer}.png"
-
+    return result[0]
 
 async def flux_sch(prompt):
     client = huggingface(model="black-forest-labs/FLUX.1-schnell", token=os.getenv("HF"))
     results = await client.text_to_image(prompt=f"{prompt}", width=1024, height=1024)
     buffer = random.randint(1, 1100)
     results.save(F"{buffer}.png")
-    return f"{buffer}"
+    return f"{buffer}.png"
 
 async def flux_gen(prompts):
     client = huggingface(model="black-forest-labs/FLUX.1-dev", token=os.getenv("HF"))
