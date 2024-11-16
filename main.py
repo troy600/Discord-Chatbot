@@ -773,6 +773,7 @@ async def flux_schnell(ctx, prompt):
     await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
     file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
     await ctx.send(file=file)
+    asyncio.sleep(2)
     children.remove(imagefile)
 
 @bot.hybrid_command(name="anything_xl", description="animate image generator")
