@@ -780,6 +780,7 @@ async def flux_schnell(ctx, prompt):
 async def anything_xl(ctx, prompt, negative : str = None):
     await ctx.defer()
     imagefile =await anythingxl(prompt, negative)
+    print(imagefile)
     await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
     file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
     await ctx.send(file=file)
