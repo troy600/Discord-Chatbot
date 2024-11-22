@@ -19,11 +19,12 @@ import requests
 from gradio_client import Client as Flux_Sch
 from huggingface_hub import AsyncInferenceClient as huggingface
 from huggingface_hub import login
-
-
-login(f"os.getenv{('HF')}", False, True, True)
-
 load_dotenv()
+
+hfkey = os.getenv("HF")
+print(hfkey)
+
+login(hfkey)
 current_language = load_current_language()
 internet_access = config['INTERNET_ACCESS']
 results_limit = config['MAX_SEARCH_RESULTS']
@@ -33,24 +34,30 @@ client = AsyncOpenAI(api_key = os.getenv('CHIMERA_GPT_KEY'), base_url = "https:/
 
 
 async def anythingxl(prompts, negative):
-    client = Flux_Sch("artificialguybr/Anything-XL-Free-Demo")
-    result = client.predict(
-        async_mode=True,
+    if negative == None:
+        negative = "(low quality, worst quality:1.2), very displeasing, 3d, watermark, signature, ugly, poorly drawn"
+        print(negative)
+    client = Flux_Sch("votepurchase/votepurchase-AnythingXL_xl")
+    result = client.submit(
 	    prompt=prompts,
-		negative_prompt="",
+		negative_prompt=f"{negative}",
 		seed=0,
-		custom_width=1024,
-		custom_height=1024,
+		width=1024,
+		height=1024,
 		guidance_scale=7,
-		num_inference_steps=28,
-		sampler="DPM++ 2M SDE Karras",
-		aspect_ratio_selector="1024 x 1024",
-		use_upscaler=False,
-		upscaler_strength=0.55,
-		upscale_by=1.5,
-		api_name="/run"
+		num_inference_steps=20,
+		api_name="/infer"
     )
-    return result[0]
+    return result.result()
+
+'''
+async def anythingxl(prompts, negative):
+    client = huggingface(model="eienmojiki/Anything-XL", token=os.getenv("HF"))
+    results = await client.text_to_image(prompt=f"{prompts}", width=1024, height=1024)
+    buffer = random.randint(1, 1100)
+    results.save(F"{buffer}.png")
+    return f"{buffer}.png"
+'''
 
 async def flux_sch(prompt):
     client = huggingface(model="black-forest-labs/FLUX.1-schnell", token=os.getenv("HF"))
@@ -59,8 +66,10 @@ async def flux_sch(prompt):
     results.save(F"{buffer}.png")
     return f"{buffer}.png"
 
+
+
 async def flux_gen(prompts):
-    client = huggingface(model="black-forest-labs/FLUX.1-dev", token=os.getenv("HF"))
+    client = huggingface(model="stabilityai/stable-diffusion-3.5-large", token=os.getenv("HF"))
     image = await client.text_to_image(prompts)
     buffer = random.randint(1, 1000)
     image.save(f"{buffer}.png")
