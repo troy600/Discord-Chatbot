@@ -1,22 +1,28 @@
 import asyncio
+from g4f.Provider import HuggingChat
+history = []
 
-this = ""
-
-from g4f.client import AsyncClient
+from g4f.client import Client
 
 async def main(things):
-    client = AsyncClient()
-    stream = await client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": f"{things}"}],
-        stream=True,
-        # Add any other necessary parameters
+    client = Client(
+        provider=HuggingChat,
     )
-    async for chunk in stream:
-        if chunk.choices[0].delta.content:
-            print(chunk.choices[0].delta.content or "", end="")
+    response = await client.chat.completions.async_create(
+        model="mistral-nemo",
+        messages=[
+            {"role": "system", "content": f"{mesa}},
+            *things
+            ],
+    )
+    cht = response.choices[0].message.content
+    history.append({"role": "assistant", "content": f"{cht}"},)
+    print(cht)
+    return cht
+    
 
 while True:
     user = input ("\n>>")
-    asyncio.run(main(things=user))
+    history.append({"role": "user", "content": f"{user}"},)
+    asyncio.run(main(things=history))
 
