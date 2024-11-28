@@ -171,5 +171,5 @@ channels.txt
 # Replit
 .replit
 poetry.lock
-pyproject.toml
+#pyproject.toml
 replit.nix
