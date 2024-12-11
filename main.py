@@ -141,7 +141,7 @@ async def on_message(message):
     is_replied = (message.reference and message.reference.resolved.author == bot.user) and smart_mention
     is_dm_channel = isinstance(message.channel, discord.DMChannel)
     is_active_channel = string_channel_id in active_channels
-    is_allowed_dm = allow_dm and is_dm_channel                                                                                                
+    is_allowed_dm = allow_dm and is_dm_channel
     contains_trigger_word = any(word in message.content for word in trigger_words)
     is_bot_mentioned = bot.user.mentioned_in(message) and smart_mention and not message.mention_everyone
     bot_name_in_message = bot.user.name.lower() in message.content.lower() and smart_mention
