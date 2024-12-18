@@ -20,4 +20,4 @@ pillow
 yt-dlp
 g4f
 gradio_client
-
+pynacl
