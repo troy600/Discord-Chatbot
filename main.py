@@ -211,7 +211,7 @@ async def hello(ctx):
 async def join(ctx):
     channel = ctx.author.voice.channel
     await channel.connect()
-    await ctx.send("joined ;)")
+    await ctx.send("Joined :)")
 
 @bot.hybrid_command(name="leave", description="kick me on avc")
 async def leave(ctx):
@@ -225,10 +225,18 @@ async def play(ctx, link: str):
     await ctx.defer()
 
     if not voice_channel_client.is_playing():
-        children.remove("audio.mp3")
+        try:
+            children.remove("audio.mp3")
+        except FileNotFoundError:
+            print("no file skipping")
+        except Exception:
+            print("e")
+
         children.system(f"yt-dlp -f 140 '{link}' -o audio.mp3")
         voice_channel_client.play(discord.FFmpegPCMAudio("audio.mp3"))
-        await ctx.send(f'Now playing')
+        await ctx.send(f'Now playing: {link}')
+        children.remove("audio.mp3")
+
     else:
         await ctx.send('Already playing audio.')
 
@@ -240,7 +248,7 @@ async def clear(ctx):
     try:
         message_history[key].clear()
     except Exception as e:
-        await ctx.send(f"there is no message to be cleard?", delete_after=5)
+        await ctx.send(f"there is no message to be cleard? deleting this message in 5 sec", delete_after=5)
         return
 
     await ctx.send(f"mesage has been cleared", delete_after=9)
@@ -750,10 +758,11 @@ async def chat(ctx, prompt: str, image: discord.Attachment = None):
     history = message_history[key]
 
     base64_image = base64.b64encode(image_bytes).decode('utf-8')
+    await ctx.send(image)
+
     async with ctx.channel.typing():
         response = await llama_vision(prompt=prompt, image=base64_image)
         for chunk in split_response(response):
-            await ctx.send(image)
             await ctx.send(chunk)
             message_history[key].append({"role": "assistant", "name": personaname, "content": chunk})
 
