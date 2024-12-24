@@ -736,6 +736,7 @@ async def yt_music(ctx, yt_link, file_name : str = "audio"):
     await ctx.send(f"{yt_link} success")
     file = discord.File(f'./temp/{file_name}.mp3')
     await ctx.send(file=file)
+    asyncio.sleep(7)
     children.system("rm -rvf ./temp/*")
 
 
