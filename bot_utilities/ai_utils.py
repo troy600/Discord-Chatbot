@@ -59,6 +59,16 @@ async def anythingxl(prompts, negative):
     return f"{buffer}.png"
 '''
 
+
+
+async def ai_hoshino(prompt):
+    client = huggingface("Blane187/ai-hoshino-s1-ponyxl-lora-nochekaise", token=os.getenv("HF"))
+    results = await client.text_to_image(prompt)
+    buffer = random.randint(1, 1111)
+    results.save(f"{buffer}.png")
+    return f"{buffer}.png"
+
+
 async def flux_sch(prompt):
     client = huggingface(model="black-forest-labs/FLUX.1-schnell", token=os.getenv("HF"))
     results = await client.text_to_image(prompt=f"{prompt}", width=1024, height=1024)
