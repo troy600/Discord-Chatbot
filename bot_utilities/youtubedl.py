@@ -40,7 +40,6 @@ async def ffmpeg_function(namemusic):
     await bash_command(f"ffmpeg -i ./temp/{tempmusic3}.mp3 -i ./temp/{tempmusic2}.png -map 1:0 -map 0:0 -c copy './temp/{namemusic}.mp3'")
 
 async def func(links):
-    await bash_command("rm -rvf ./temp/*")
     await asyncio.gather(download_thumbnail(links), download_m4a(links))
 
 async def thefunc(link, music_name):
