@@ -13,7 +13,7 @@ from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from bot_utilities.youtubedl import thefunc
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl, ai_hoshino
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -240,6 +240,11 @@ async def play(ctx, link: str):
     else:
         await ctx.send('Already playing audio.')
 
+@bot.hybrid_command(name="stop", description="Stop playing the music")
+async def stop(ctx):
+    voice_channel_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice_channel_client.stop()
+
 
 @bot.hybrid_command(name="clear", description="clear the message history")
 async def clear(ctx):
@@ -458,6 +463,17 @@ async def imagine_dalle(ctx, prompt, model: app_commands.Choice[str], num_images
     for imagefileobj in imagefileobjs:
         file = discord.File(imagefileobj, filename="image.png", spoiler=True, description=prompt)
         sent_message =  await ctx.send(file=file)
+
+
+@bot.hybrid_command(name="hoshino", description="generate images with hoshino's face :3")
+async def hoshino(ctx, prompt):
+    await ctx.defer()
+    imagefile = await ai_hoshino(prompt)
+    await ctx.send(f'🎨 Generated Image by {ctx.author.name} prompt {prompt}')
+    file = discord.File(imagefile, filename="image.png", spoiler=True, description=prompt)
+    sent_message =  await ctx.send(file=file)
+    children.remove(imagefile)
+
 
 
 @bot.hybrid_command(name="flux", description="generate images using flux")
