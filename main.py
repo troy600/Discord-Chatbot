@@ -12,7 +12,7 @@ import random
 from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
-from bot_utilities.youtubedl import thefunc
+from bot_utilities.youtubedl import thefunc, bash_command
 from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl, ai_hoshino
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
@@ -232,7 +232,8 @@ async def play(ctx, link: str):
         except Exception:
             print("e")
 
-        children.system(f"yt-dlp -f 140 '{link}' -o audio.mp3")
+        await bash_command(f"yt-dlp -f 140 '{link}' -o audio.mp3")
+        #children.system(f"yt-dlp -f 140 '{link}' -o audio.mp3")
         voice_channel_client.play(discord.FFmpegPCMAudio("audio.mp3"))
         await ctx.send(f'Now playing: {link}')
         children.remove("audio.mp3")
