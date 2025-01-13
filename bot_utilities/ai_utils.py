@@ -50,17 +50,6 @@ async def anythingxl(prompts, negative):
     )
     return result.result()
 
-'''
-async def anythingxl(prompts, negative):
-    client = huggingface(model="eienmojiki/Anything-XL", token=os.getenv("HF"))
-    results = await client.text_to_image(prompt=f"{prompts}", width=1024, height=1024)
-    buffer = random.randint(1, 1100)
-    results.save(F"{buffer}.png")
-    return f"{buffer}.png"
-'''
-
-
-
 async def ai_hoshino(prompt):
     client = huggingface("Blane187/ai-hoshino-s1-ponyxl-lora-nochekaise", token=os.getenv("HF"))
     results = await client.text_to_image(prompt)
@@ -346,7 +335,6 @@ async def llama_vision(prompt, image):
     )
 
     message = response.choices[0].message.content
-#    message = response.choices[0].message.content
     return message
 
 
