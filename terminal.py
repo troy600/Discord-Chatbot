@@ -9,7 +9,7 @@ dotenv.load_dotenv()
 key = os.getenv("CHIMERA_GPT_KEY")
 #print(key)
 
-with open("avernus.txt", "r") as avernus:
+with open("instructions/avernus.txt", "r") as avernus:
     mesa = avernus.read()
 
 client = AsyncClient(api_key=f"{key}", base_url="https://api.naga.ac/v1")
