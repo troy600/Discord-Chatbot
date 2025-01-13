@@ -203,6 +203,8 @@ async def on_message(message):
         else:
             await message.reply(content="I apologize for any inconvenience caused. It seems that there was an error preventing the delivery of my message.")
 
+
+
 @bot.hybrid_command(name="hello", description="get random response")
 async def hello(ctx):
     await ctx.send(await get_random_prompt("hello"))
@@ -258,6 +260,8 @@ async def clear(ctx):
         return
 
     await ctx.send(f"mesage has been cleared", delete_after=9)
+
+
 
 @commands.guild_only()
 @bot.hybrid_command(name="show-sauce", description="will show sauces dont enter anything to show stored data")
