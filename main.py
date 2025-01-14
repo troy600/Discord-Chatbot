@@ -763,8 +763,6 @@ async def yt_music(ctx, yt_link, file_name : str = "audio"):
 
 @bot.hybrid_command(name="chat", description="Ask gemini a question")
 async def chat(ctx, prompt: str, image: discord.Attachment = None):
-#    message_history.append({"role": "user", "content": prompt})
-#    history = message_history
     await ctx.defer()
 
     key = f"{ctx.author.id}-{ctx.channel.id}"
@@ -806,6 +804,7 @@ async def flux_schnell(ctx, prompt):
     await ctx.send(file=file)
     asyncio.sleep(2)
     children.remove(imagefile)
+
 
 @bot.hybrid_command(name="anything_xl", description="animate image generator")
 async def anything_xl(ctx, prompt, negative : str = None):
