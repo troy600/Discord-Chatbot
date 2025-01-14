@@ -21,3 +21,4 @@ yt-dlp
 g4f
 gradio_client
 pynacl
+#audioop-lts>=0.2.1
