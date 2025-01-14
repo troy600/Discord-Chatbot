@@ -124,11 +124,10 @@ git clone https://github.com/troy600/Discord-Chatbot
 ```
 cd Discord-AI-Chatbot
 ```
-## Step 3. 💾 Install requirements
+## Step 3. 💾 Install requirements(Uv will automatically add this on run so it is optional)
 ```
 # Linux distros
-bash venv.sh 
-./venv/bin/pip install -r requirements.txt
+uv add --requirements requirements.txt
 ```
 
 ### Step 4. 🔑 Getting discord bot token and enabling intents from [HERE](https://discord.com/developers/applications)
@@ -162,8 +161,7 @@ CHIMERA_GPT_KEY=<YOUR_CHIMIRA_API_KEY>
 ```
 ### Step 7. 🚀 Run the bot
 ```
-chmod 755 main.py
-./main.py
+uv run main.py
 ```
 #### You may need to run as admin if you are on Windows
 ### Step 8. 🔗 Invite the bot 
