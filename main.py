@@ -114,9 +114,10 @@ g4f_history = {}
 async def on_message(message):
     lines = [f'{message.author}: {message.content}']
     with open('chatlog.txt', 'a') as f:
-#        if message.author.bot:
-#            await message.add_reaction('👍')
-#            await message.add_reaction('👎')
+        if config['LIKETODISLIKE'] == True:
+            if message.author.bot:
+                await message.add_reaction('👍')
+                await message.add_reaction('👎')
         for line in lines:
             f.write(line)
             f.write('\n')
