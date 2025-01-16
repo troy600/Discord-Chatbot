@@ -33,7 +33,7 @@ def add_reaction(message):
     asyncio.run_coroutine_threadsafe(message.add_reaction('👎'), bot.loop)
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix="/", intents=intents, heartbeat_timeout=120)
+bot = commands.Bot(command_prefix="/", intents=intents, heartbeat_timeout=999999)
 TOKEN = children.getenv('DISCORD_TOKEN')  # Loads Discord bot token from env
 
 if TOKEN is None:
@@ -415,13 +415,10 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
      prompt="make bot say something",
      size="Choose the size of the image"
 )
-
 @commands.is_owner()
 @commands.guild_only()
-@bot.hybrid_command(name="troysays", description="say someting")
-
-@commands.guild_only()
-async def troysays(ctx, prompt: str):
+@bot.hybrid_command(name="ali_say", description="say someting")
+async def ali_say(ctx, prompt: str):
     await ctx.send(prompt)
 
 @bot.hybrid_command(name='dall_e_3', description='eyy')
