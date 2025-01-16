@@ -246,6 +246,7 @@ async def play(ctx, link: str):
 
 @bot.hybrid_command(name="stop", description="Stop playing the music")
 async def stop(ctx):
+    ctx.send("Stopped", delete_after=5)
     voice_channel_client = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice_channel_client.stop()
 
