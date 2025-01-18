@@ -51,6 +51,7 @@ trigger_words = config['TRIGGER']
 smart_mention = config['SMART_MENTION']
 presences = config["PRESENCES"]
 presences_disabled = config["DISABLE_PRESENCE"]
+
 # Imagine config
 image_negatives = config['IMAGE_FILTER_DEFAULT']
 blacklisted_words = config['BLACKLIST_WORDS']
