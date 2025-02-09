@@ -32,7 +32,7 @@ async def download_thumbnail(flink):
     await bash_command(f"/usr/bin/yt-dlp '{flink}' --embed-thumbnail --no-download  -o ./temp/{tempthumb}")
 
 async def download_m4a(flink):
-    await bash_command(f'yt-dlp -f140 "{flink}" --embed-metadata --parse-metadata "playlist_index:%(track_number)s" -o ./temp/{tempmusic}.m4a')
+    await bash_command(f'yt-dlp -f140 "{flink}" --embed-metadata -o ./temp/{tempmusic}.m4a')
 
 async def ffmpeg_function(namemusic):
     await bash_command(f'ffmpeg -i ./temp/{tempthumb}.webp -vf "crop=w=min(min(iw\,ih)\,720):h=min(min(iw\,ih)\,720),scale=720:720,setsar=1" -vframes 1 ./temp/{tempmusic2}.png')
