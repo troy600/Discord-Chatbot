@@ -314,6 +314,7 @@ async def sauce_put(ctx, sauce, rating, tags, character = None, parody = None, t
         jsonn.write(json_data)
         await ctx.send(f"{sauce} stored sucessfully")
 
+'''
 @commands.guild_only()
 @bot.hybrid_command(name="imagine", description="Command to imagine an image")
 @app_commands.choices(sampler=[
@@ -411,6 +412,7 @@ async def imagine(ctx, prompt: str, model: app_commands.Choice[str], sampler: ap
     if is_nsfw:
         embed.add_field(name='🔞 NSFW', value=f'- {str(is_nsfw)}', inline=True)
     await ctx.send(embed=embed, files=files)
+'''
 
 @app_commands.describe(
      prompt="make bot say something",
