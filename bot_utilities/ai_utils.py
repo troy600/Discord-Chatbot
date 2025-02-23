@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 import asyncio
 import sys
 from duckduckgo_search import AsyncDDGS
-import openai
 import requests
 from gradio_client import Client as Flux_Sch
 from huggingface_hub import AsyncInferenceClient as huggingface
@@ -150,8 +149,8 @@ async def search(prompt):
     blob = ""
     prompt = prompt.replace("Avernus", "").replace("@Avernus", "")
     async with AsyncDDGS() as ddgs:
-        search = ddgs.text(prompt, max_results=results_limit)
-        for index, result in enumerate(search):
+        search = ddgs.text(search_query, max_results=results_limit)
+        for result in enumerate(search):
             body_value = result.get("body", None)
             href_value = result.get("href", None)
             title_value = result.get("title", None)
@@ -160,13 +159,14 @@ async def search(prompt):
     print(blob)
     return blob
 
-
+'''
 def fetch_models():
     openai.api_key = os.getenv('CHIMERA_GPT_KEY')
     modelget = openai.Model.list()
     for models in modelget['data']:
         print(models['id'], models['owner'], models['ready'])
     return models
+'''
 
 async def dall_e_3(model, prompt):
     response = await client.images.generate(
@@ -217,7 +217,7 @@ async def dalle3(model, prompt):
     return imagefileobjs
 '''
 
-
+'''
 async def tts(zmessage, zmodel):
     voicez = await client.audio.speech.create(
         model="text-moderation-latest",
@@ -226,13 +226,15 @@ async def tts(zmessage, zmodel):
     )
     with open("zaudio.wav", "wb") as source:
         source.write(voicez["data"])
+'''
+
 
 async def generate_response(instructions, search, history):
     search_results = search if search is not None else "Search feature is disabled"
     messages = [
             {"role": "system", "name": "instructions", "content": instructions},
             *history,
-            {"role": "system", "name": "search_results", "content": search_results},
+            {"role": "system", "name": "search_results", "content": search_results}
         ]
     response = await client.chat.completions.create(
         model=config['GPT_MODEL'],
@@ -307,7 +309,7 @@ async def generate_image_prodia(prompt, model, sampler, seed, neg):
                     async with session.get(f'https://images.prodia.xyz/{job_id}.png?download=1', headers=headers) as response:
                         content = await response.content.read()
                         img_file_obj = io.BytesIO(content)
-                        heyy = random.randint(1 , 6969696969)
+                        #heyy = random.randint(1 , 6969696969)
                         duration = time.time() - start_time
                         print(f"\033[1;34m(Avernus) Finished image creation\n\033[0mJob id : {job_id}  Prompt : ", prompt, "in", duration, "seconds.")
                         return img_file_obj

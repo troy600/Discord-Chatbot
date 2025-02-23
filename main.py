@@ -13,7 +13,7 @@ from discord import Embed, app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from bot_utilities.youtubedl import thefunc, bash_command
-from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_models, fetch_chat_models, tts, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl, ai_hoshino
+from bot_utilities.ai_utils import generate_response, generate_image_prodia, search, poly_image_gen, dall_e_gen, dall_e_3, fetch_chat_models, tenor, flux_gen, llama_vision, dalle3, g4f_fetch_chat_models, flux_sch, anythingxl, ai_hoshino
 from bot_utilities.response_util import split_response, translate_to_en, get_random_prompt
 from bot_utilities.discord_util import check_token, get_discord_token
 from bot_utilities.config_loader import config, load_current_language, load_instructions
@@ -788,13 +788,13 @@ async def chat(ctx, prompt: str, image: discord.Attachment = None):
             await ctx.send(chunk)
             message_history[key].append({"role": "assistant", "name": personaname, "content": chunk})
 
-
+'''
 @bot.hybrid_command(name="tts", description="use tts")
 async def ttst(ctx, message, model):
     ctx.defer()
     await tts(zmessage=message, zmodel=model)
     ctx.send(file="zaudio.wav")
-
+'''
 
 
 @bot.hybrid_command(name="flux_schnell", description="use to generate images using flux_schnell")
